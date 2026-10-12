@@ -112,10 +112,13 @@ router.delete("/:id", async (req, res) => {
     }
 
     res.json({ message: "Task deleted successfully." });
-  } catch (error) {
-    const status = error.name === "CastError" ? 400 : 500;
-    res.status(status).json({ message: "Failed to delete task." });
-  }
+  }  catch (error) {
+  console.error("Task creation failed:", error);
+
+  res.status(500).json({
+    message: "Failed to create task.",
+  });
+}
 });
 
 module.exports = router;

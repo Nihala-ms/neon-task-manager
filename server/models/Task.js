@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const taskSchema = new mongoose.Schema(
@@ -13,6 +14,7 @@ const taskSchema = new mongoose.Schema(
     },
     priority: {
       type: String,
+      enum: ["Low", "Medium", "High"],
       default: "Medium",
     },
     category: {

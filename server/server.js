@@ -1,3 +1,4 @@
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -7,21 +8,15 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Test route
 app.get("/", (req, res) => {
   res.json({
     message: "Cute Pastel Task Manager API is running! 🌸",
   });
 });
 
-// Task routes
-app.use("/api/tasks", require("./routes/taskRoutes"));
-
-// Connect to MongoDB once and reuse the connection
 let connectionPromise;
 
 async function connectDB() {
@@ -30,8 +25,14 @@ async function connectDB() {
   }
 
   if (!connectionPromise) {
+    if (!process.env.MONGO_URI) {
+      throw new Error("MONGO_URI is missing from environment variables.");
+    }
+
     connectionPromise = mongoose
-      .connect(process.env.MONGO_URI)
+      .connect(process.env.MONGO_URI, {
+        serverSelectionTimeoutMS: 10000,
+      })
       .catch((error) => {
         connectionPromise = null;
         throw error;
@@ -41,23 +42,33 @@ async function connectDB() {
   await connectionPromise;
 }
 
-// Ensure the database is connected before handling requests
-app.use(async (req, res, next) => {
+// Connect to MongoDB before handling API requests.
+app.use("/api", async (req, res, next) => {
   try {
     await connectDB();
     next();
   } catch (error) {
     console.error("MongoDB connection failed:", error.message);
+
     res.status(500).json({
-      message: "Database connection failed",
+      message: "Database connection failed.",
     });
   }
 });
 
-// Export the Express app for Vercel
+// Register task routes AFTER the database middleware.
+app.use("/api/tasks", require("./routes/taskRoutes"));
+
+app.use((err, req, res, next) => {
+  console.error("Backend error:", err.message);
+
+  res.status(500).json({
+    message: "An unexpected server error occurred.",
+  });
+});
+
 module.exports = app;
 
-// Run a local server only when developing locally
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
 
