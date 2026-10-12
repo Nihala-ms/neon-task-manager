@@ -1,28 +1,43 @@
-
 const express = require("express");
+const router = express.Router();
 const Task = require("../models/Task");
 
-const router = express.Router();
+function requireBrowserId(req, res, next) {
+  const browserId = req.get("x-browser-id");
 
-// GET: Fetch all tasks
+  if (!browserId || browserId.length > 100) {
+    return res.status(400).json({
+      message: "A valid browser ID is required.",
+    });
+  }
+
+  req.browserId = browserId;
+  next();
+}
+
+router.use(requireBrowserId);
+
+// GET: Only this browser's tasks
 router.get("/", async (req, res) => {
   try {
-    const tasks = await Task.find().sort({ createdAt: -1 });
-    res.status(200).json(tasks);
+    const tasks = await Task.find({
+      browserId: req.browserId,
+    }).sort({ createdAt: -1 });
+
+    res.json(tasks);
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch tasks" });
+    res.status(500).json({ message: "Failed to fetch tasks." });
   }
 });
 
-// POST: Create a new task
+// POST: Create a task for this browser
 router.post("/", async (req, res) => {
   try {
-    const { title, description, priority, category, dueDate } = req.body;
+    const { title, description, priority, category, dueDate, completed } =
+      req.body;
 
     if (!title || !title.trim()) {
-      return res.status(400).json({
-        message: "Task title is required",
-      });
+      return res.status(400).json({ message: "Task title is required." });
     }
 
     const task = await Task.create({
@@ -31,51 +46,75 @@ router.post("/", async (req, res) => {
       priority,
       category,
       dueDate: dueDate || null,
+      completed,
+      browserId: req.browserId,
     });
 
     res.status(201).json(task);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: "Failed to create task." });
   }
 });
 
-// PATCH: Update a task
+// PATCH: Update only a task owned by this browser
 router.patch("/:id", async (req, res) => {
   try {
-    const task = await Task.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
+    const updates = {};
+    const allowedFields = [
+      "title",
+      "description",
+      "priority",
+      "category",
+      "dueDate",
+      "completed",
+    ];
+
+    for (const field of allowedFields) {
+      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+        updates[field] = req.body[field];
       }
+    }
+
+    if (typeof updates.title === "string") {
+      updates.title = updates.title.trim();
+      if (!updates.title) {
+        return res.status(400).json({ message: "Task title is required." });
+      }
+    }
+
+    const task = await Task.findOneAndUpdate(
+      { _id: req.params.id, browserId: req.browserId },
+      updates,
+      { new: true, runValidators: true }
     );
 
     if (!task) {
-      return res.status(404).json({ message: "Task not found" });
+      return res.status(404).json({ message: "Task not found." });
     }
 
-    res.status(200).json(task);
+    res.json(task);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    const status = error.name === "CastError" ? 400 : 500;
+    res.status(status).json({ message: "Failed to update task." });
   }
 });
 
-// DELETE: Delete a task
+// DELETE: Delete only a task owned by this browser
 router.delete("/:id", async (req, res) => {
   try {
-    const task = await Task.findByIdAndDelete(req.params.id);
+    const task = await Task.findOneAndDelete({
+      _id: req.params.id,
+      browserId: req.browserId,
+    });
 
     if (!task) {
-      return res.status(404).json({ message: "Task not found" });
+      return res.status(404).json({ message: "Task not found." });
     }
 
-    res.status(200).json({
-      message: "Task deleted successfully",
-      id: task._id,
-    });
+    res.json({ message: "Task deleted successfully." });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    const status = error.name === "CastError" ? 400 : 500;
+    res.status(status).json({ message: "Failed to delete task." });
   }
 });
 

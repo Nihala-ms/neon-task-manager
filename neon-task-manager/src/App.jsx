@@ -17,6 +17,8 @@ import {
   PartyPopper,
 } from "lucide-react";
 import API from "./api";
+import { getBrowserId } from "./utils/browserId";
+API.defaults.headers.common["x-browser-id"] = getBrowserId();
 
 const initialForm = {
   title: "",
