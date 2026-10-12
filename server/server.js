@@ -1,4 +1,3 @@
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -22,18 +21,47 @@ app.get("/", (req, res) => {
 // Task routes
 app.use("/api/tasks", require("./routes/taskRoutes"));
 
-// Connect to MongoDB and start server
-const PORT = process.env.PORT || 5000;
+// Connect to MongoDB once and reuse the connection
+let connectionPromise;
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("🌸 MongoDB connected successfully");
+async function connectDB() {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
 
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
-    });
-  })
-  .catch((error) => {
+  if (!connectionPromise) {
+    connectionPromise = mongoose
+      .connect(process.env.MONGO_URI)
+      .catch((error) => {
+        connectionPromise = null;
+        throw error;
+      });
+  }
+
+  await connectionPromise;
+}
+
+// Ensure the database is connected before handling requests
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
     console.error("MongoDB connection failed:", error.message);
+    res.status(500).json({
+      message: "Database connection failed",
+    });
+  }
+});
+
+// Export the Express app for Vercel
+module.exports = app;
+
+// Run a local server only when developing locally
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+
+  app.listen(PORT, () => {
+    console.log(`🌸 Server running on port ${PORT}`);
   });
+}
