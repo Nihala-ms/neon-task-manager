@@ -1,0 +1,431 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap");
+@import "tailwindcss";
+
+:root {
+  font-family: "Nunito", sans-serif;
+  color: #312e45;
+  background: #fff9fd;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --candy-pink: #fb8fbd;
+  --candy-lilac: #a78bfa;
+  --candy-mint: #8ce7ca;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgb(192 132 252 / 45%);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: #fbcfe8;
+  color: #6b21a8;
+}
+
+/* Page background */
+
+.candy-page {
+  isolation: isolate;
+  background:
+    radial-gradient(
+      ellipse at 8% 4%,
+      rgb(255 222 239 / 55%),
+      transparent 35%
+    ),
+    radial-gradient(
+      ellipse at 92% 18%,
+      rgb(232 222 255 / 60%),
+      transparent 35%
+    ),
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgb(207 250 229 / 50%),
+      transparent 42%
+    ),
+    #fffaff;
+}
+
+.candy-orb {
+  filter: blur(75px);
+  opacity: 0.55;
+  animation: candy-drift 12s ease-in-out infinite alternate;
+}
+
+.candy-orb-pink {
+  background: #ffc4df;
+}
+
+.candy-orb-lilac {
+  background: #d8c8ff;
+  animation-delay: -4s;
+}
+
+.candy-orb-mint {
+  background: #b9f5df;
+  animation-delay: -7s;
+}
+
+.candy-float {
+  color: #f4a5ce;
+  opacity: 0.6;
+  animation: candy-float 5s ease-in-out infinite;
+}
+
+.candy-float-delay {
+  color: #b7a0ff;
+  animation-delay: -2s;
+}
+
+.candy-float-slow {
+  color: #78d9b7;
+  animation-duration: 7s;
+}
+
+/* Brand */
+
+.candy-logo {
+  background: linear-gradient(135deg, #fb8fbd, #b29aff 58%, #83dfce);
+  box-shadow: 0 9px 24px rgb(192 132 252 / 25%);
+  transition:
+    transform 250ms ease,
+    box-shadow 250ms ease;
+}
+
+.candy-logo:hover {
+  transform: rotate(-7deg) scale(1.07);
+  box-shadow: 0 13px 30px rgb(192 132 252 / 35%);
+}
+
+.candy-gradient-text {
+  background: linear-gradient(
+    105deg,
+    #f472b6 5%,
+    #a78bfa 48%,
+    #38bda1 95%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.candy-badge {
+  color: #8b5cc5;
+  background: linear-gradient(
+    110deg,
+    rgb(255 224 240 / 95%),
+    rgb(237 228 255 / 95%),
+    rgb(218 250 239 / 95%)
+  );
+  box-shadow: 0 5px 15px rgb(167 139 250 / 9%);
+}
+
+/* Main panels */
+
+.candy-panel {
+  border: 1px solid rgb(255 255 255 / 90%);
+  background: rgb(255 255 255 / 78%);
+  box-shadow:
+    0 12px 40px rgb(144 111 183 / 8%),
+    0 2px 8px rgb(244 177 215 / 8%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.candy-card-hover {
+  transition:
+    transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 280ms ease,
+    border-color 280ms ease;
+}
+
+.candy-card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 18px 38px rgb(167 139 250 / 13%),
+    0 5px 15px rgb(244 177 215 / 12%);
+}
+
+.candy-icon-box {
+  background: linear-gradient(145deg, #ffe1ef, #e9ddff);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 90%);
+}
+
+.candy-progress-track {
+  background: #f1edf7;
+}
+
+.candy-progress-fill {
+  background: linear-gradient(90deg, #fb8fbd, #b39aff, #82dec8);
+  box-shadow: 0 0 14px rgb(244 114 182 / 25%);
+  transition: width 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.candy-message {
+  background: linear-gradient(
+    120deg,
+    rgb(255 228 240 / 90%),
+    rgb(238 230 255 / 90%),
+    rgb(224 250 240 / 90%)
+  );
+}
+
+/* Statistic cards */
+
+.stat-lilac {
+  color: #8b5cf6;
+  background: linear-gradient(140deg, #eee5ff, #e8e8ff);
+}
+
+.stat-peach {
+  color: #e78a62;
+  background: linear-gradient(140deg, #fff0df, #ffe4ed);
+}
+
+.stat-mint {
+  color: #229c7c;
+  background: linear-gradient(140deg, #d8f9ed, #e4f7ff);
+}
+
+/* Buttons */
+
+.candy-primary-button {
+  border: 1px solid rgb(255 255 255 / 35%);
+  background: linear-gradient(110deg, #f472b6, #a78bfa 58%, #75d8c1);
+  background-size: 160% 100%;
+  box-shadow:
+    0 8px 22px rgb(192 132 252 / 22%),
+    inset 0 1px 0 rgb(255 255 255 / 30%);
+  transition:
+    transform 250ms ease,
+    box-shadow 250ms ease,
+    background-position 350ms ease;
+}
+
+.candy-primary-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  background-position: 100% 0;
+  box-shadow:
+    0 13px 28px rgb(192 132 252 / 30%),
+    0 5px 15px rgb(244 114 182 / 15%);
+}
+
+.candy-primary-button:active:not(:disabled) {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.candy-refresh {
+  border: 1px solid #eee4ff;
+  background: linear-gradient(140deg, #f4edff, #ffe9f4);
+  transition:
+    transform 300ms ease,
+    box-shadow 250ms ease;
+}
+
+.candy-refresh:hover:not(:disabled) {
+  transform: rotate(12deg) scale(1.06);
+  box-shadow: 0 7px 17px rgb(167 139 250 / 17%);
+}
+
+/* Task cards */
+
+.candy-task-card {
+  box-shadow: 0 4px 14px rgb(144 111 183 / 4%);
+  transition:
+    transform 260ms ease,
+    box-shadow 260ms ease,
+    border-color 260ms ease,
+    background-color 260ms ease;
+}
+
+.candy-task-card:not(.candy-task-complete):hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 13px 26px rgb(244 114 182 / 10%),
+    0 4px 12px rgb(167 139 250 / 8%);
+}
+
+.candy-task-complete {
+  background: linear-gradient(
+    120deg,
+    rgb(236 253 245 / 90%),
+    rgb(240 253 250 / 75%)
+  );
+}
+
+.candy-enter {
+  animation: candy-enter 400ms both;
+}
+
+/* Empty state */
+
+.candy-empty-state {
+  background: linear-gradient(
+    140deg,
+    rgb(255 233 244 / 65%),
+    rgb(240 233 255 / 65%),
+    rgb(227 250 241 / 55%)
+  );
+  border: 1px dashed rgb(196 181 253 / 55%);
+}
+
+.candy-empty-icon {
+  background: linear-gradient(145deg, #fff, #fff0f7 55%, #f0eaff);
+  box-shadow:
+    0 10px 25px rgb(167 139 250 / 10%),
+    inset 0 1px 0 #fff;
+  animation: candy-float 4s ease-in-out infinite;
+}
+
+/* Form and modal */
+
+.candy-modal-backdrop {
+  background: rgb(57 42 76 / 35%);
+  animation: candy-fade-in 180ms ease-out both;
+}
+
+.candy-modal {
+  box-shadow:
+    0 28px 90px rgb(66 45 96 / 23%),
+    0 8px 28px rgb(244 114 182 / 12%);
+  animation: candy-modal-in 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.candy-input {
+  border-color: #e9def8;
+  background-color: #fdfaff;
+  color: #312e45;
+  transition:
+    border-color 200ms ease,
+    background-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.candy-input::placeholder {
+  color: #b4a8c4;
+}
+
+.candy-input:hover {
+  border-color: #d7c4fa;
+}
+
+.candy-input:focus {
+  border-color: #b39aff;
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgb(196 181 253 / 23%);
+}
+
+/* Animations */
+
+@keyframes candy-drift {
+  from {
+    transform: translate3d(-10px, 0, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(22px, 18px, 0) scale(1.08);
+  }
+}
+
+@keyframes candy-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+
+  50% {
+    transform: translateY(-12px) rotate(5deg);
+  }
+}
+
+@keyframes candy-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes candy-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes candy-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Accessibility: respect reduced-motion preferences */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mobile polish */
+
+@media (max-width: 640px) {
+  .candy-orb {
+    filter: blur(55px);
+  }
+
+  .candy-panel {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}

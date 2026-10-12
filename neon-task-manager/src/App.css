@@ -1,0 +1,74 @@
+
+/* Cute pastel UI polish */
+
+button,
+.task-card,
+.stat-card,
+.filter-button,
+input,
+textarea,
+select {
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.task-card,
+.stat-card {
+  border: 1px solid #f3e6f0;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 5px 20px rgba(104, 68, 101, 0.055);
+}
+
+.task-card:hover,
+.stat-card:hover {
+  border-color: #f3c7df;
+  box-shadow: 0 12px 28px rgba(170, 112, 157, 0.12);
+  transform: translateY(-3px);
+}
+
+input,
+textarea,
+select {
+  border-radius: 12px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #d8a5d5;
+  box-shadow: 0 0 0 4px rgba(216, 165, 213, 0.17);
+  outline: none;
+}
+
+.progress-bar,
+.progress-fill {
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.completed,
+.task-completed {
+  background: #effaf4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button,
+  .task-card,
+  .stat-card,
+  .progress-bar,
+  .progress-fill {
+    transition: none;
+  }
+}
